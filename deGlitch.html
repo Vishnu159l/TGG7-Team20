@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="deGlitch.css">
+        <style>
+            .fix-button {
+                display: none;
+                margin: 10px auto;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="side">
+            <div class="profile">
+                <img src="https://t3.ftcdn.net/jpg/06/19/26/46/360_F_619264680_x2PBdGLF54sFe7kTBtAvZnPyXgvaRw0Y.jpg" alt="Profile">
+                <p style="font-size: 1.5rem;padding-right: 20px;">Name</p>
+            </div>
+            <div class="device-section">
+                <div class="devicename">Mobile Phone</div>
+                <div class="deviceicon">
+                    <img src="https://www.svgrepo.com/show/164980/cell-phone.svg" alt="mobile" style="height:35px;">
+                </div>
+            </div>
+            <div class="device-section">
+                <div class="devicename">Laptop</div>
+                <div class="deviceicon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/59/59505.png" alt="laptop" style="height:35px">
+                </div>
+            </div>
+            <div class="device-section">
+                <div class="devicename">Headphones</div>
+                <div class="deviceicon">
+                    <img src="https://www.svgrepo.com/show/73781/headphones-with-music-note.svg" alt="head" style="height:35px">
+                </div>
+            </div>
+            <div class="device-section">
+                <div class="devicename">Printer</div>
+                <div class="deviceicon">
+                    <img src="https://www.svgrepo.com/show/14899/printer.svg" alt="printer" style="height:35px">
+                </div>
+            </div>
+        </div>
+        <div class="main">
+            <h1 style="text-align: center;">Current Device Risk Status</h1>
+            <div class="device-grid">
+                <div id="b1" class="block">
+                    <div style="flex:1">
+                        <img src="https://www.svgrepo.com/show/164980/cell-phone.svg" alt="mobile" style="height:120px;padding-top:20px;padding-left: 10px;">
+                        <p>Mobile Phone</p>
+                    </div>
+                    <div style="flex:3;text-align: center;">
+                        <p class="bp">Analysis Result</p>
+                        <div id="s1" class="s">Error fetching result</div>
+                        <div id="l1" class="lin"></div>
+                        <div id="e1">Network Error: Failed to fetch</div>
+                        <a href="#"> <button id="fix1" class="fix-button">Fix It</button></a>
+                    </div>
+                </div>
+                <div id="b2" class="block">
+                    <div style="flex:1">
+                        <img src="https://cdn-icons-png.flaticon.com/512/59/59505.png" alt="laptop" style="height:120px;padding-top:20px;padding-left: 20px;">
+                        <p>Laptop</p>
+                    </div>
+                    <div style="flex:3;text-align: center;">
+                        <p class="bp">Analysis Result</p>
+                        <div id="s2" class="s">Error fetching result</div>
+                        <div id="l2" class="lin"></div>
+                        <div id="e2">Network Error: Failed to fetch</div>
+                        <a href="#"> <button id="fix2" class="fix-button">Fix It</button></a>
+                    </div>
+                </div>
+                <div id="b3" class="block">
+                    <div style="flex:1">
+                        <img src="https://www.svgrepo.com/show/73781/headphones-with-music-note.svg" alt="head" style="height:120px;padding-top:20px;padding-left: 20px;">
+                        <p>Headphones</p>
+                    </div>
+                    <div style="flex:3;text-align: center;">
+                        <p class="bp">Analysis Result</p>
+                        <div id="s3" class="s">Error fetching result</div>
+                        <div id="l3" class="lin"></div>
+                        <div id="e3">Network Error: Failed to fetch</div>
+                        <a href="#"> <button id="fix3" class="fix-button">Fix It</button></a>
+                    </div>
+                </div>
+                <div id="b4" class="block">
+                    <div style="flex:1">
+                        <img src="https://www.svgrepo.com/show/14899/printer.svg" alt="printer" style="height:120px;padding-top:20px;padding-left: 20px;">
+                        <p>Printer</p>
+                    </div>
+                    <div style="flex:3;text-align: center;">
+                        <p class="bp">Analysis Result</p>
+                        <div id="s4" class="s">Error fetching result</div>
+                        <div id="l4" class="lin"></div>
+                        <div id="e4">Network Error: Failed to fetch</div>
+                       <a href="#"> <button id="fix4" class="fix-button">Fix It</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function fetchResult() {
+            // Replace with your ACTUAL server IP/domain and port
+            const serverUrl = 'http://172.16.44.211:50000/get_result';
+            let temp = -1;
+            console.log('Attempting to fetch result from:', serverUrl);
+
+            fetch(serverUrl)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', response.headers);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json(); 
+                })
+                .then(data => {
+                    const deviceBlocks = [
+                        ['b1','e1','s1','fix1'],
+                        ['b2','e2','s2','fix2'],
+                        ['b3','e3','s3','fix3'],
+                        ['b4','e4','s4','fix4']
+                    ];
+                    const randomIndex = getRandomInt(0, 3);
+                    console.log('Received data:', data);
+
+                    // Reset all blocks to default state
+                    deviceBlocks.forEach(block => {
+                        const blockElement = document.getElementById(block[0]);
+                        const statusElement = document.getElementById(block[2]);
+                        const fixButton = document.getElementById(block[3]);
+                        
+                        blockElement.style.background = 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
+                        statusElement.textContent = 'Safe';
+                        fixButton.style.display = 'none';
+                    });
+
+                    if (data.result) {
+                        const resultBlock = deviceBlocks[randomIndex];
+                        const resultElement = document.getElementById(resultBlock[2]);
+                        const errorElement = document.getElementById(resultBlock[1]);
+                        const divBlock = document.getElementById(resultBlock[0]);
+                        const fixButton = document.getElementById(resultBlock[3]);
+
+                        const parts = data.result.split(" ");
+                        const riskScore = parseFloat(parts[0]);
+
+                        if (riskScore < 3) {
+                            resultElement.textContent = 'Low Risk';
+                            divBlock.style.background = 'linear-gradient(135deg, #2c84ff 0%, #1a5aff 100%)';
+                            fixButton.style.display = 'none';
+                        } else if (riskScore < 7) {
+                            resultElement.textContent = 'Medium Risk';
+                            divBlock.style.background = 'linear-gradient(135deg, #f1c40f 0%, #f39c12 100%)';
+                            fixButton.style.display = 'block';
+                        } else {
+                            resultElement.textContent = 'High Risk';
+                            divBlock.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+                            fixButton.style.display = 'block';
+                        }
+
+                        const attackTypes = parts.slice(1).join(' ').split(",");
+                        errorElement.textContent = `Types of Attacks: ${attackTypes.join(", ")}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Full error details:', error);
+                    // Update all blocks with error state
+                    const deviceBlocks = [
+                        ['b1','e1','s1','fix1'],
+                        ['b2','e2','s2','fix2'],
+                        ['b3','e3','s3','fix3'],
+                        ['b4','e4','s4','fix4']
+                    ];
+                    
+                    deviceBlocks.forEach(block => {
+                        const resultElement = document.getElementById(block[2]);
+                        const errorElement = document.getElementById(block[1]);
+                        const fixButton = document.getElementById(block[3]);
+                        
+                        resultElement.textContent = 'Error';
+                        errorElement.textContent = `Network Error: ${error.message}`;
+                        fixButton.style.display = 'none';
+                    });
+                });
+        }
+
+        // Fetch result immediately
+        fetchResult();
+
+        // Optional: Periodically check for updates (e.g., every 5 seconds)
+        setInterval(fetchResult, 5000);
+    </script>
+    </body>
+</html>
